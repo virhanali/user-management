@@ -7,5 +7,5 @@ import (
 
 func Routes(app fiber.Router, userHandler *handler.UserHandler) {
 	r := app.Group("/api/v1")
-	r.Post("/", userHandler.Create)
+	r.Post("/admin", userHandler.Create)
 }
