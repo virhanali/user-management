@@ -14,4 +14,5 @@ func Routes(app fiber.Router, userHandler *handler.UserHandler) {
 	r.Get("/admin/:id", userHandler.GetUserByID)
 	r.Post("/admin", userHandler.CreateUser)
 	r.Put("/admin/:id", userHandler.UpdateUser)
+	r.Delete("/admin/:id", userHandler.DeleteUser)
 }

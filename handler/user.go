@@ -115,3 +115,19 @@ func (handler UserHandler) UpdateUser(ctx *fiber.Ctx) error {
 		Data:    user,
 	})
 }
+
+func (handler UserHandler) DeleteUser(ctx *fiber.Ctx) error {
+	userId, _ := strconv.Atoi(ctx.Params("id"))
+	err := handler.userService.DeleteUser(userId)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse{
+			Code:    fiber.StatusBadRequest,
+			Message: "Delete user failed",
+			Error:   err.Error(),
+		})
+	}
+	return ctx.Status(fiber.StatusOK).JSON(response.SuccessResponse{
+		Code:    fiber.StatusOK,
+		Message: "Delete user successfully",
+	})
+}

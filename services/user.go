@@ -12,6 +12,7 @@ type IUserService interface {
 	GetAllUser() ([]models.User, error)
 	GetUserById(id int) (models.User, error)
 	UpdateUser(userRequest models.UpdateUserRequest, id int) (models.User, error)
+	DeleteUser(id int) error
 }
 
 type UserService struct {
@@ -88,4 +89,14 @@ func (services UserService) UpdateUser(userRequest models.UpdateUserRequest, id 
 	copier.Copy(&userRes, &user)
 
 	return userRes, nil
+}
+
+func (services UserService) DeleteUser(id int) error {
+	_, err := services.userRepository.FindById(id)
+	if err != nil {
+		return err
+	}
+
+	err = services.userRepository.Delete(id)
+	return err
 }
