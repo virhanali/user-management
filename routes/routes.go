@@ -8,7 +8,10 @@ import (
 func Routes(app fiber.Router, userHandler *handler.UserHandler) {
 	r := app.Group("/api/v1")
 	r.Get("/users", userHandler.GetAllUser)
+	r.Get("/users/:id", userHandler.GetUserByID)
 
 	r.Get("/admin", userHandler.GetAllUser)
-	r.Post("/admin", userHandler.Create)
+	r.Get("/admin/:id", userHandler.GetUserByID)
+	r.Post("/admin", userHandler.CreateUser)
+	r.Put("/admin/:id", userHandler.UpdateUser)
 }
