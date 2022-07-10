@@ -8,7 +8,9 @@ import (
 )
 
 type IUserService interface {
-	Store(user models.CreateUserRequest) (models.User, error)
+	CreateUser(user models.CreateUserRequest) (models.User, error)
+	GetAllUser() ([]models.User, error)
+	GetUserById(id int) (models.User, error)
 }
 
 type UserService struct {
@@ -19,7 +21,7 @@ func NewUserService(userRepository repository.IUserRepository) *UserService {
 	return &UserService{userRepository}
 }
 
-func (service UserService) Store(input models.CreateUserRequest) (models.UserResponse, error) {
+func (service UserService) CreateUser(input models.CreateUserRequest) (models.UserResponse, error) {
 
 	user := models.User{}
 	copier.Copy(&user, &input)
@@ -38,5 +40,25 @@ func (service UserService) Store(input models.CreateUserRequest) (models.UserRes
 	userRes := models.UserResponse{}
 	copier.Copy(&userRes, &user)
 
+	return userRes, nil
+}
+
+func (service UserService) GetAllUser() ([]models.UserResponse, error) {
+	users, err := service.userRepository.FindAll()
+	if err != nil {
+		return nil, err
+	}
+	userRes := []models.UserResponse{}
+	copier.Copy(&userRes, &users)
+	return userRes, nil
+}
+
+func (service UserService) GetUserById(id int) (models.UserResponse, error) {
+	user, err := service.userRepository.FindById(id)
+	if err != nil {
+		return models.UserResponse{}, err
+	}
+	userRes := models.UserResponse{}
+	copier.Copy(&userRes, &user)
 	return userRes, nil
 }

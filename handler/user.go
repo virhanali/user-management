@@ -24,7 +24,7 @@ func (handler UserHandler) Create(ctx *fiber.Ctx) error {
 			Error:   err.Error(),
 		})
 	}
-	newUser, err := handler.userService.Store(userRequest)
+	newUser, err := handler.userService.CreateUser(userRequest)
 
 	if err != nil {
 		ctx.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse{
@@ -37,5 +37,29 @@ func (handler UserHandler) Create(ctx *fiber.Ctx) error {
 		Code:    fiber.StatusOK,
 		Message: "User created successfully",
 		Data:    newUser,
+	})
+}
+
+func (handler UserHandler) GetAllUser(ctx *fiber.Ctx) error {
+	users, err := handler.userService.GetAllUser()
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(response.ErrorResponse{
+			Code:    fiber.StatusBadRequest,
+			Message: "Get all user failed",
+			Error:   err.Error(),
+		})
+	}
+
+	if len(users) < 1 {
+		return ctx.Status(fiber.StatusNotFound).JSON(response.ErrorResponse{
+			Code:    fiber.StatusNotFound,
+			Message: "No user found",
+		})
+	}
+
+	return ctx.Status(fiber.StatusOK).JSON(response.SuccessResponse{
+		Code:    fiber.StatusOK,
+		Message: "Get all user successfully",
+		Data:    users,
 	})
 }
